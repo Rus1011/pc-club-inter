@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZ game - Компьютерный клуб</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0d0d0d;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            border-bottom: 2px solid #ff4d00;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            color: #ff4d00;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        
+        nav a:hover {
+            color: #ff4d00;
+        }
+        
+        .banner {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+        }
+        
+        .banner h2 {
+            font-size: 36px;
+            color: #ff4d00;
+            margin-bottom: 15px;
+        }
+        
+        .phone {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4d00;
+        }
+        
+        .work-hours {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        
+        .monitoring {
+            background-color: #111;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .monitoring h3 {
+            color: #ff4d00;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .halls-monitoring {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .hall-monitor {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        
+        .hall-monitor h4 {
+            color: #ff4d00;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #222;
+            border-radius: 8px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .free .stat-value {
+            color: #00ff00;
+        }
+        
+        .busy .stat-value {
+            color: #ff4444;
+        }
+        
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .seat {
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .seat:hover {
+            transform: scale(1.05);
+        }
+        
+        .seat.free {
+            background-color: #1e7a1e;
+            border: 2px solid #00ff00;
+        }
+        
+        .seat.occupied {
+            background-color: #7a1e1e;
+            border: 2px solid #ff4444;
+        }
+        
+        .seat-number {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .seat-status {
+            font-size: 10px;
+            margin-top: 2px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid #ff4d00;
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #bbbbbb;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .modal h3 {
+            color: #ff4d00;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 10px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #bbbbbb;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 8px;
+            width: 100%;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+        }
+        
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background-color: #ff4d00;
+            color: #fff;
+        }
+        
+        .btn-secondary {
+            background-color: #444;
+            color: #fff;
+        }
+        
+        .admin-panel {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            z-index: 999;
+        }
+        
+        .admin-btn {
+            background-color: #ff4d00;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(255, 77, 0, 0.3);
+            transition: 0.3s;
+        }
+        
+        .scheme {
+            background-color: #111;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .scheme h3 {
+            color: #ff4d00;
+            margin-bottom: 20px;
+        }
+        
+        .hall-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .hall-section {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .hall-section:hover {
+            border-color: #ff4d00;
+        }
+        
+        .hall-section h4 {
+            color: #ff4d00;
+            margin-bottom: 10px;
+        }
+        
+        .prices {
+            background-color: #111;
+            padding: 40px 20px;
+        }
+        
+        .prices h3 {
+            text-align: center;
+            color: #ff4d00;
+            margin-bottom: 30px;
+        }
+        
+        .price-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .price-card {
+            background-color: #1c1c1c;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        
+        .price-card:hover {
+            border-color: #ff4d00;
+        }
+        
+        .price-card h4 {
+            color: #ff4d00;
+            margin-bottom: 15px;
+        }
+        
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        
+        .price-table th,
+        .price-table td {
+            border: 1px solid #333;
+            padding: 5px;
+            text-align: center;
+        }
+        
+        .price-table th {
+            background-color: #2a2a2a;
+            color: #ff4d00;
+        }
+        
+        .hardware {
+            padding: 40px 20px;
+        }
+        
+        .hardware h3 {
+            text-align: center;
+            color: #ff4d00;
+            margin-bottom: 30px;
+        }
+        
+        .hardware-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .hardware .card {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        
+        .hardware .card h4 {
+            color: #ff4d00;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .specs-table th,
+        .specs-table td {
+            border: 1px solid #333;
+            padding: 5px;
+        }
+        
+        footer {
+            background-color: #1a1a1a;
+            text-align: center;
+            padding: 20px;
+            color: #aaaaaa;
+            font-size: 12px;
+            border-top: 2px solid #ff4d00;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: bold;
+            z-index: 1001;
+            animation: slideIn 0.3s;
+        }
+        
+        .notification.success {
+            background-color: #00ff00;
+            color: #000;
+        }
+        
+        .notification.error {
+            background-color: #ff4444;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            nav ul {
+                gap: 10px;
+                margin-top: 10px;
+            }
+            
+            .hall-layout,
+            .halls-monitoring {
+                grid-template-columns: 1fr;
+            }
+            
+            .banner {
+                padding: 40px 20px;
+            }
+            
+            .banner h2 {
+                font-size: 24px;
+            }
+            
+            .phone {
+                font-size: 18px;
+            }
+            
+            .seats-grid {
+                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            }
+            
+            .seat {
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>EZ game</h1>
+        <nav>
+            <ul>
+                <li><a href="#monitoring">Мониторинг</a></li>
+                <li><a href="#scheme">Бронирование</a></li>
+                <li><a href="#prices">Тарифы</a></li>
+                <li><a href="#hardware">Оборудование</a></li>
+                <li><a href="#contacts">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="banner">
+        <div class="container">
+            <h2>Компьютерный клуб EZ game</h2>
+            <p>Сургут: Улица 50 лет ВЛКСМ, 11</p>
+            <p class="work-hours">Работаем круглосуточно</p>
+            <div class="contact-info">
+                <p class="phone">8 (800) 555-35-35</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="monitoring" id="monitoring">
+        <div class="container">
+            <h3>МОНИТОРИНГ МЕСТ</h3>
+            <div class="halls-monitoring" id="halls-container">
+            </div>
+        </div>
+    </section>
+
+    <section class="scheme" id="scheme">
+        <div class="container">
+            <h3>БРОНИРОВАНИЕ</h3>
+            <div class="hall-layout">
+                <div class="hall-section" onclick="openBookingModal('standard')">
+                    <h4>STANDARD ЗАЛ</h4>
+                    <p>120₽/час • <span id="standard-free-count">15</span>/20 мест свободно</p>
+                </div>
+                <div class="hall-section" onclick="openBookingModal('vip')">
+                    <h4>VIP ЗАЛ</h4>
+                    <p>170₽/час • <span id="vip-free-count">6</span>/10 мест свободно</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeBookingModal()">×</button>
+            <h3>Бронирование места</h3>
+            <div class="booking-form">
+                <div class="form-group">
+                    <label>Зал:</label>
+                    <input type="text" id="bookingRoom" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Место:</label>
+                    <select id="bookingSeat"></select>
+                </div>
+                <div class="form-group">
+                    <label>Дата:</label>
+                    <input type="date" id="bookingDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Время:</label>
+                    <input type="time" id="bookingStartTime" placeholder="Начало" required style="margin-bottom:5px">
+                    <input type="time" id="bookingEndTime" placeholder="Окончание" required>
+                </div>
+                <div class="form-group">
+                    <label>Имя:</label>
+                    <input type="text" id="bookingName" placeholder="Иван Иванов" required>
+                </div>
+                <div class="form-group">
+                    <label>Телефон:</label>
+                    <input type="tel" id="bookingPhone" placeholder="+7 (XXX) XXX-XX-XX" required>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="bookingEmail" placeholder="example@mail.ru" required>
+                </div>
+                <div class="form-buttons">
+                    <button class="btn btn-primary" onclick="submitBooking()">Забронировать</button>
+                    <button class="btn btn-secondary" onclick="closeBookingModal()">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <button class="admin-btn" onclick="openAdminPanel()">ADMIN</button>
+    </div>
+
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeAdminPanel()">×</button>
+            <h3>Административная панель</h3>
+            <div class="admin-form">
+                <div class="form-group">
+                    <label>Зал:</label>
+                    <select id="adminRoom">
+                        <option value="standard">STANDARD ЗАЛ</option>
+                        <option value="vip">VIP ЗАЛ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Номер места:</label>
+                    <input type="number" id="adminSeatNumber" min="1" placeholder="Введите номер места">
+                </div>
+                <div class="form-group">
+                    <label>Действие:</label>
+                    <select id="adminAction" onchange="toggleAdminFields()">
+                        <option value="add">Добавить место</option>
+                        <option value="remove">Удалить место</option>
+                        <option value="status">Изменить статус</option>
+                    </select>
+                </div>
+                <div class="form-group" id="adminStatusGroup" style="display: none;">
+                    <label>Новый статус:</label>
+                    <select id="adminStatus">
+                        <option value="available">Свободно</option>
+                        <option value="occupied">Занято</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button class="btn btn-primary" onclick="executeAdminAction()">Выполнить</button>
+                    <button class="btn btn-secondary" onclick="closeAdminPanel()">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="prices" id="prices">
+        <div class="container">
+            <h3>ТАРИФЫ</h3>
+            <div class="price-cards">
+                <div class="price-card">
+                    <h4>STANDARD</h4>
+                    <table class="price-table">
+                        <tr><th>Сумма</th><th>Часы</th></tr>
+                        <tr><td>120₽</td><td>1</td></tr>
+                        <tr><td>350₽</td><td>3</td></tr>
+                        <tr><td>500₽</td><td>5</td></tr>
+                        <tr><td>600₽</td><td>6</td></tr>
+                        <tr><td>700₽</td><td>8</td></tr>
+                    </table>
+                </div>
+                <div class="price-card">
+                    <h4>VIP</h4>
+                    <table class="price-table">
+                        <tr><th>Сумма</th><th>Часы</th></tr>
+                        <tr><td>170₽</td><td>1</td></tr>
+                        <tr><td>380₽</td><td>3</td></tr>
+                        <tr><td>530₽</td><td>5</td></tr>
+                        <tr><td>650₽</td><td>6</td></tr>
+                        <tr><td>750₽</td><td>8</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hardware" id="hardware">
+        <div class="container">
+            <h3>Железо</h3>
+            <div class="hardware-cards">
+                <div class="card">
+                    <h4>ОБЩИЙ ЗАЛ</h4>
+                    <table class="specs-table">
+                        <tr><th>Название</th><th>Модель</th></tr>
+                        <tr><td>Процессор</td><td>AMD Ryzen 7 5700X</td></tr>
+                        <tr><td>Видеокарта</td><td>RTX 4000Ti</td></tr>
+                        <tr><td>Оперативная память</td><td>RAM 100B</td></tr>
+                    </table>
+                </div>
+                <div class="card">
+                    <h4>VIP ЗАЛ</h4>
+                    <table class="specs-table">
+                        <tr><th>Название</th><th>Модель</th></tr>
+                        <tr><td>Процессор</td><td>Intel Core i5-12400F</td></tr>
+                        <tr><td>Видеокарта</td><td>RTX 4000Ti</td></tr>
+                        <tr><td>Оперативная память</td><td>RAM 100B</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contacts">
+        <div class="container">
+            <p>© 2025 EZ game — Все права защищены</p>
+            <p>Улица 50 лет ВЛКСМ, 11 | Сургут</p>
+            <p class="phone">8 (800) 555-35-35</p>
+            <p class="work-hours">Работаем круглосуточно</p>
+        </div>
+    </footer>
+
+    <script>
+        //Инициализация данных
+        let hallsData = {
+            standard: {
+                name: "STANDARD ЗАЛ",
+                seats: [],
+                totalSeats: 20,
+                hourlyRate: 120,
+                freeSeats: 15,
+                busySeats: 5
+            },
+            vip: {
+                name: "VIP ЗАЛ",
+                seats: [],
+                totalSeats: 10,
+                hourlyRate: 170,
+                freeSeats: 6,
+                busySeats: 4
+            }
+        };
+
+        let currentBookingRoom = '';
+        const adminPassword = "admin123";
+
+        //Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSeats();
+            loadFromLocalStorage();
+            updateAvailability();
+            
+            //Минимальная дата
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+        });
+
+        //Инициализация мест
+        function initializeSeats() {
+            for (let i = 1; i <= hallsData.standard.totalSeats; i++) {
+                hallsData.standard.seats.push({
+                    number: i,
+                    status: i <= 5 ? 'occupied' : 'available'
+                });
+            }
+            
+            for (let i = 1; i <= hallsData.vip.totalSeats; i++) {
+                hallsData.vip.seats.push({
+                    number: i,
+                    status: i <= 4 ? 'occupied' : 'available'
+                });
+            }
+            
+            renderHalls();
+        }
+
+        function renderHalls() {
+            const container = document.getElementById('halls-container');
+            container.innerHTML = '';
+            
+            for (const hallKey in hallsData) {
+                const hall = hallsData[hallKey];
+                const hallDiv = document.createElement('div');
+                hallDiv.className = 'hall-monitor';
+                
+                let seatsHtml = '';
+                hall.seats.forEach(seat => {
+                    seatsHtml += `
+                        <div class="seat ${seat.status}" 
+                             onclick="handleSeatClick('${hallKey}', ${seat.number})">
+                            <div class="seat-number">${seat.number}</div>
+                            <div class="seat-status">${seat.status === 'available' ? 'Свободно' : 'Занято'}</div>
+                        </div>
+                    `;
+                });
+                
+                hallDiv.innerHTML = `
+                    <h4>${hall.name}</h4>
+                    <div class="stats">
+                        <div class="stat-item free">
+                            <div class="stat-value">${hall.freeSeats}</div>
+                            <div>Свободно</div>
+                        </div>
+                        <div class="stat-item busy">
+                            <div class="stat-value">${hall.busySeats}</div>
+                            <div>Занято</div>
+                        </div>
+                    </div>
+                    <div class="seats-grid">
+                        ${seatsHtml}
+                    </div>
+                `;
+                
+                container.appendChild(hallDiv);
+            }
+        }
+
+        function handleSeatClick(hallKey, seatNumber) {
+            const hall = hallsData[hallKey];
+            const seat = hall.seats.find(s => s.number === seatNumber);
+            
+            if (seat.status === 'available') {
+                currentBookingRoom = hallKey;
+                openBookingModal(hallKey, seatNumber);
+            } else {
+                showNotification(`Место ${seatNumber} уже занято`, 'error');
+            }
+        }
+
+        function openBookingModal(hallKey, seatNumber = null) {
+            currentBookingRoom = hallKey;
+            const hall = hallsData[hallKey];
+            
+            document.getElementById('bookingRoom').value = hall.name;
+            
+            const seatSelect = document.getElementById('bookingSeat');
+            seatSelect.innerHTML = '';
+            
+            hall.seats.forEach(seat => {
+                if (seat.status === 'available') {
+                    const option = document.createElement('option');
+                    option.value = seat.number;
+                    option.textContent = `Место ${seat.number}`;
+                    if (seat.number === seatNumber) {
+                        option.selected = true;
+                    }
+                    seatSelect.appendChild(option);
+                }
+            });
+            
+            //Установка времени
+            const now = new Date();
+            const startTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            document.getElementById('bookingStartTime').value = startTime;
+            
+            const endTime = new Date(now.getTime() + 60 * 60 * 1000); // +1 час
+            document.getElementById('bookingEndTime').value = 
+                `${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}`;
+            
+            document.getElementById('bookingModal').style.display = 'flex';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            document.getElementById('bookingName').value = '';
+            document.getElementById('bookingPhone').value = '';
+            document.getElementById('bookingEmail').value = '';
+        }
+
+        //Отправка бронирования
+        function submitBooking() {
+            const hall = hallsData[currentBookingRoom];
+            const seatNumber = parseInt(document.getElementById('bookingSeat').value);
+            const date = document.getElementById('bookingDate').value;
+            const startTime = document.getElementById('bookingStartTime').value;
+            const endTime = document.getElementById('bookingEndTime').value;
+            const name = document.getElementById('bookingName').value;
+            const phone = document.getElementById('bookingPhone').value;
+            const email = document.getElementById('bookingEmail').value;
+            
+            // Валидация
+            if (!seatNumber || !date || !startTime || !endTime || !name || !phone || !email) {
+                showNotification('Пожалуйста, заполните все поля', 'error');
+                return;
+            }
+            
+            //Проверка времени бронирования
+            if (startTime >= endTime) {
+                showNotification('Время окончания должно быть позже времени начала', 'error');
+                return;
+            }
+            
+            const seat = hall.seats.find(s => s.number === seatNumber);
+            if (seat && seat.status === 'available') {
+                seat.status = 'occupied';
+                hall.freeSeats--;
+                hall.busySeats++;
+                
+                //Сохранение бронирования
+                const booking = {
+                    hall: currentBookingRoom,
+                    seat: seatNumber,
+                    date: date,
+                    startTime: startTime,
+                    endTime: endTime,
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    timestamp: new Date().toISOString()
+                };
+                
+                saveBooking(booking);
+                updateAvailability();
+                renderHalls();
+                closeBookingModal();
+                
+                showNotification(`Место ${seatNumber} успешно забронировано!`, 'success');
+            } else {
+                showNotification('Это место уже занято', 'error');
+            }
+        }
+
+        function calculateCost(hourlyRate, startTime, endTime) {
+            const [startHours, startMinutes] = startTime.split(':').map(Number);
+            const [endHours, endMinutes] = endTime.split(':').map(Number);
+            
+            const startTotal = startHours * 60 + startMinutes;
+            const endTotal = endHours * 60 + endMinutes;
+            
+            const hours = (endTotal - startTotal) / 60;
+            return Math.ceil(hours * hourlyRate);
+        }
+
+        function saveBooking(booking) {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            bookings.push(booking);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            localStorage.setItem('hallsData', JSON.stringify(hallsData));
+        }
+
+        function loadFromLocalStorage() {
+            const savedHalls = localStorage.getItem('hallsData');
+            if (savedHalls) {
+                hallsData = JSON.parse(savedHalls);
+                renderHalls();
+            }
+        }
+
+        function updateAvailability() {
+            document.getElementById('standard-free-count').textContent = hallsData.standard.freeSeats;
+            document.getElementById('vip-free-count').textContent = hallsData.vip.freeSeats;
+        }
+
+        //Админ
+        function openAdminPanel() {
+            const password = prompt('Введите пароль администратора:');
+            if (password === adminPassword) {
+                document.getElementById('adminModal').style.display = 'flex';
+            } else if (password !== null) {
+                showNotification('Неверный пароль', 'error');
+            }
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminModal').style.display = 'none';
+            document.getElementById('adminSeatNumber').value = '';
+        }
+
+        function toggleAdminFields() {
+            const action = document.getElementById('adminAction').value;
+            document.getElementById('adminStatusGroup').style.display = 
+                action === 'status' ? 'block' : 'none';
+        }
+
+        function executeAdminAction() {
+            const hallKey = document.getElementById('adminRoom').value;
+            const seatNumber = parseInt(document.getElementById('adminSeatNumber').value);
+            const action = document.getElementById('adminAction').value;
+            
+            if (!seatNumber || seatNumber < 1) {
+                showNotification('Введите корректный номер места', 'error');
+                return;
+            }
+            
+            const hall = hallsData[hallKey];
+            
+            switch(action) {
+                case 'add':
+                    addSeat(hallKey, seatNumber);
+                    break;
+                case 'remove':
+                    removeSeat(hallKey, seatNumber);
+                    break;
+                case 'status':
+                    const status = document.getElementById('adminStatus').value;
+                    changeSeatStatus(hallKey, seatNumber, status);
+                    break;
+            }
+            
+            localStorage.setItem('hallsData', JSON.stringify(hallsData));
+            updateAvailability();
+            renderHalls();
+            closeAdminPanel();
+        }
+
+        function addSeat(hallKey, seatNumber) {
+            const hall = hallsData[hallKey];
+            
+            if (hall.seats.find(s => s.number === seatNumber)) {
+                showNotification(`Место ${seatNumber} уже существует!`, 'error');
+                return;
+            }
+            
+            hall.seats.push({
+                number: seatNumber,
+                status: 'available'
+            });
+            
+            hall.totalSeats++;
+            hall.freeSeats++;
+            hall.seats.sort((a, b) => a.number - b.number);
+            
+            showNotification(`Место ${seatNumber} добавлено`, 'success');
+        }
+
+        function removeSeat(hallKey, seatNumber) {
+            const hall = hallsData[hallKey];
+            const index = hall.seats.findIndex(s => s.number === seatNumber);
+            
+            if (index === -1) {
+                showNotification(`Место ${seatNumber} не найдено!`, 'error');
+                return;
+            }
+            
+            const seat = hall.seats[index];
+            if (seat.status !== 'available') {
+                showNotification('Нельзя удалить занятое место', 'error');
+                return;
+            }
+            
+            hall.seats.splice(index, 1);
+            hall.totalSeats--;
+            hall.freeSeats--;
+            
+            showNotification(`Место ${seatNumber} удалено`, 'success');
+        }
+
+        function changeSeatStatus(hallKey, seatNumber, status) {
+            const hall = hallsData[hallKey];
+            const seat = hall.seats.find(s => s.number === seatNumber);
+            
+            if (!seat) {
+                showNotification(`Место ${seatNumber} не найдено!`, 'error');
+                return;
+            }
+            
+            const oldStatus = seat.status;
+            seat.status = status;
+            
+            if (oldStatus === 'available' && status !== 'available') {
+                hall.freeSeats--;
+                if (status === 'occupied') hall.busySeats++;
+            } else if (oldStatus !== 'available' && status === 'available') {
+                hall.freeSeats++;
+                if (oldStatus === 'occupied') hall.busySeats--;
+            } else if (oldStatus === 'occupied' && status !== 'occupied') {
+                hall.busySeats--;
+            } else if (oldStatus !== 'occupied' && status === 'occupied') {
+                hall.busySeats++;
+            }
+            
+            showNotification(`Статус места ${seatNumber} изменен на "${status === 'available' ? 'Свободно' : 'Занято'}"`, 'success');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
